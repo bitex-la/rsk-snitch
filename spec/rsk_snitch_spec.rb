@@ -3,7 +3,7 @@ require 'thread'
 
 describe RskSnitch do
   before :each do
-		RskSnitch::Nodes.stub(url: "ws://localhost:9292")
+    RskSnitch::Nodes.stub(url: "ws://localhost:9292")
   end
 
   it "Finds a known node" do
@@ -11,11 +11,11 @@ describe RskSnitch do
   end
 
   it "Does not find an unknown node" do
-		RskSnitch::Nodes.find('bogus').should be_falsey
+    RskSnitch::Nodes.find('bogus').should be_falsey
   end
 
   it "Times out if not found after a number of messages" do
-		RskSnitch::Nodes.find('bitex', 10).should be_falsey
+    RskSnitch::Nodes.find('bitex', 10).should be_falsey
   end
 
   it "Checks a few time to find if a node is up" do
