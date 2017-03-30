@@ -1,45 +1,28 @@
 require "spec_helper"
 require 'thread'
 
-Faye::WebSocket.load_adapter('thin')
-
-FakeServer = lambda do |env|
-	if Faye::WebSocket.websocket?(env)
-		socket = Faye::WebSocket.new(env)
-
-		socket.on :open do 
-			File.open("spec/messages_fixture.txt").each_line do |line|
-				socket.send(line)
-			end
-			socket.close
-		end
-
-		socket.rack_response
-	else
-    [200, {'Content-Type' => 'text/plain'}, ['']]
-	end
-end
-
-Thread.new do
-	Thin::Logging.silent = true
-	thin = Rack::Handler.get('thin')
-	thin.run(FakeServer, :Port => 9292)
-end
-
 describe RskSnitch do
-  it "has a version number" do
-    expect(RskSnitch::VERSION).not_to be nil
+  before :each do
+		RskSnitch::Nodes.stub(url: "ws://localhost:9292")
   end
 
-  it "Checks for an existing node" do
-		RskSnitch::RskNodeChecker.stub(url: "ws://localhost:9292")
-		expect(RskSnitch::RskNodeChecker.check('bitex')).to be_truthy
+  it "Finds a known node" do
+    RskSnitch::Nodes.find('bitex').should be_truthy
   end
 
-  it "Does not have a non existing node" do
-		RskSnitch::RskNodeChecker.stub(url: "ws://localhost:9292")
-		expect(RskSnitch::RskNodeChecker.check('bogusnode')).to be_falsey
+  it "Does not find an unknown node" do
+		RskSnitch::Nodes.find('bogus').should be_falsey
+  end
+
+  it "Times out if not found after a number of messages" do
+		RskSnitch::Nodes.find('bitex', 10).should be_falsey
+  end
+
+  it "Checks a few time to find if a node is up" do
+    RskSnitch::Nodes.up?('bitex', 3, 0).should be_truthy
+  end
+
+  it "Fails checking for an unknown node" do
+    RskSnitch::Nodes.up?('bogus', 3, 0).should be_falsey
   end
 end
-
-
