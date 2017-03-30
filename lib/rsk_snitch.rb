@@ -1,6 +1,5 @@
 require "rsk_snitch/version"
 require 'faye/websocket'
-require 'byebug'
 
 module RskSnitch
   # Checks the RSK public stats websocket to see if bitex is there
