@@ -1,12 +1,19 @@
 # RskSnitch
 
-Check if your rootstock node is running by looking it up in stats.rsk.co
+Check if your rootstock node is running by looking it up by node id in
+http://stats.rsk.co
 
-Can be used as a ruby library, but also provides a command line utility for your shell scripts.
+Notice node ids are not always the same that show up in the stats page.
+
+This is is the type of node id you should use: rskNode02SaEast1
+
+This is what shows up on the stats page: rsk-node-02.sa-east-1
 
 ## Installation
 
-Add this line to your application's Gemfile:
+    $ gem install rsk_snitch
+
+Or add this line to your application's Gemfile:
 
 ```ruby
 gem 'rsk_snitch'
@@ -16,17 +23,23 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install rsk_snitch
 
 ## Usage
 
-In bash:
+In Shell scripts:
+
 ```bash
-  $ rsk_snitch rsk-node-04.eu-west-1
-  Looking for a node with id rsk-node-04.eu-west-1, this may take a while.
+  $ rsk_snitch rskNode02SaEast1
+  Looking for a node with id rskNode02SaEast1, this may take a while.
   Found it
+  $ echo $?
+  0
+```
+
+As a ruby lib
+```ruby
+  > RskSnitch::Nodes.up?('rskNode02SaEast1')
+  true
 ```
 
 ## Development
