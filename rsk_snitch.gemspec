@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["yo@nubis.im"]
 
   spec.summary       = %q{Check if a node is reporting stats in stats.rsk.co}
-  spec.description   = %q{Check if a node is reporting stats in stats.rsk.co}
+  spec.description   = %q{Check if a node is reporting stats in stats.rsk.co. Can be used as lib or executable.}
   spec.homepage      = "https://github.com/bitex-la/rsk-snitch"
   spec.license       = "MIT"
 

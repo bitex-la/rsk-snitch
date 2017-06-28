@@ -7,11 +7,11 @@ module RskSnitch
 	# Emails admins otherwise
 	class Nodes
 		def self.url
-			"ws://stats.rsk.co/primus/?_primuscb=#{Time.now.to_i}-0"
+			"ws://stats.rsk.co/primus/?_primuscb=#{(Time.now.to_f * 1000).round}-0"
 		end
 
     def self.debug=(debug)
-      @debug = true
+      @debug = debug
     end
     
 		def self.find(node, max_messages = 500)
@@ -23,7 +23,7 @@ module RskSnitch
         ws.on :message do |event|
           puts event.data if @debug
           messages += 1
-          found = true if /"id":"#{node}"/ =~ event.data
+          found = true if /"id":".*?#{node}.*?"/ =~ event.data
           ws.close if found || messages > max_messages
         end
         
